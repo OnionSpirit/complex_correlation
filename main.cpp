@@ -52,7 +52,6 @@ namespace Correlation {
         } correlation_result *= (1.0f / static_cast<float>(sequence_size)); correlation_result /= pow(dispersion_incoming * dispersion_original, 0.5);
 
         return correlation_result;
-
     }
 
     std::vector<std::complex<float>> sequenceCentralizer(std::vector<std::complex<float>> const &sequence, int sequence_size) {
