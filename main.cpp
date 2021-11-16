@@ -24,7 +24,7 @@ int main() {
         incoming_sequence.emplace_back(RANDOM_NUMBER); incoming_sequence.back().imag(RANDOM_NUMBER);
     }
 
-    std::cout << Correlation::complexSequenceCorrelation(original_sequence, original_sequence) << std::endl;
+    std::cout << Correlation::complexSequenceCorrelation(original_sequence, incoming_sequence) << std::endl;
 
     return 0;
 }
