@@ -5,7 +5,7 @@
 
 #define RANDOM_NUMBER 1 + rand()%10
 
-std::complex<float> complexCorrelation(std::vector<std::complex<float>> const &, std::vector<std::complex<float>> const &);
+std::complex<float> complexSequenceCorrelation(std::vector<std::complex<float>> const &, std::vector<std::complex<float>> const &);
 std::vector<std::complex<float>> sequenceCentralizer(std::vector<std::complex<float>> const &, int);
 std::complex<float> dispersion(std::vector<std::complex<float>> const &, int);
 
@@ -22,12 +22,12 @@ int main() {
         incoming_sequence.emplace_back(RANDOM_NUMBER); incoming_sequence.back().imag(RANDOM_NUMBER);
     }
 
-    std::cout << complexCorrelation(original_sequence, original_sequence) << std::endl;
+    std::cout << complexSequenceCorrelation(original_sequence, original_sequence) << std::endl;
 
     return 0;
 }
 
-std::complex<float> complexCorrelation(std::vector<std::complex<float>> const & original_sequence, std::vector<std::complex<float>> const & incoming_sequence){
+std::complex<float> complexSequenceCorrelation(std::vector<std::complex<float>> const & original_sequence, std::vector<std::complex<float>> const & incoming_sequence){
 
     int sequence_size = (int)original_sequence.size();
     std::complex<float> correlation_result;
