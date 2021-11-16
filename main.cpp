@@ -5,7 +5,8 @@
 
 #define RANDOM_NUMBER 1 + rand()%10
 namespace Correlation{
-    std::complex<float> complexSequenceCorrelation(std::vector<std::complex<float>> const &, std::vector<std::complex<float>> const &);
+    std::complex<float> complexSequenceCorrelation(std::vector<std::complex<float>> const &, 
+                                                   std::vector<std::complex<float>> const &);
     std::vector<std::complex<float>> sequenceCentralizer(std::vector<std::complex<float>> const &, int);
     std::complex<float> dispersion(std::vector<std::complex<float>> const &, int);
 }
@@ -29,7 +30,8 @@ int main() {
 }
 
 namespace Correlation {
-    std::complex<float> complexSequenceCorrelation(std::vector<std::complex<float>> const &original_sequence, std::vector<std::complex<float>> const &incoming_sequence) {
+    std::complex<float> complexSequenceCorrelation(std::vector<std::complex<float>> const &original_sequence, 
+                                                   std::vector<std::complex<float>> const &incoming_sequence) {
 
         int sequence_size = (int) original_sequence.size();
         std::complex<float> correlation_result;
@@ -39,10 +41,8 @@ namespace Correlation {
             conjugated_incoming_sequence.emplace_back(conj(e));
         }
 
-        std::vector<std::complex<float>> centralized_sequence_original = sequenceCentralizer(original_sequence,
-                                                                                             sequence_size);
-        std::vector<std::complex<float>> centralized_sequence_incoming = sequenceCentralizer(
-                conjugated_incoming_sequence, sequence_size);
+        std::vector<std::complex<float>> centralized_sequence_original = sequenceCentralizer(original_sequence, sequence_size);
+        std::vector<std::complex<float>> centralized_sequence_incoming = sequenceCentralizer(conjugated_incoming_sequence, sequence_size);
 
         std::complex<float> dispersion_original = dispersion(centralized_sequence_original, sequence_size);
         std::complex<float> dispersion_incoming = dispersion(centralized_sequence_incoming, sequence_size);
@@ -56,7 +56,7 @@ namespace Correlation {
         return correlation_result;
 
     }
-    
+
     std::vector<std::complex<float>> sequenceCentralizer(std::vector<std::complex<float>> const &sequence, int sequence_size) {
 
         std::complex<float> real_avg;
