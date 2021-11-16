@@ -45,7 +45,7 @@ std::complex<float> complexSequenceCorrelation(std::vector<std::complex<float>> 
 
     for(int i = 0; i < sequence_size; i++){
         correlation_result += centralized_sequence_incoming[i] * centralized_sequence_original[i];
-    } correlation_result *= (1.0f / (float)sequence_size); correlation_result /= pow(dispersion_incoming * dispersion_original, 0.5);
+    } correlation_result *= (1.0f / static_cast<float>(sequence_size)); correlation_result /= pow(dispersion_incoming * dispersion_original, 0.5);
 
     return correlation_result;
 }
@@ -58,7 +58,7 @@ std::vector<std::complex<float>> sequenceCentralizer(std::vector<std::complex<fl
 
     for (std::complex<float> e : sequence){
         real_avg += e.real();
-    } real_avg *= (1.0f / (float)sequence_size);
+    } real_avg *= (1.0f / static_cast<float>(sequence_size));
 
     float temp_original = 0;
     for (std::complex<float> e : sequence){
@@ -78,7 +78,7 @@ std::complex<float> dispersion(std::vector<std::complex<float>> const & sequence
 
     for (std::complex<float> e : sequence){
         D += std::norm(e);
-    } D *= (1.0f / (float)sequence_size);
+    } D *= (1.0f / (1.0f / static_cast<float>(sequence_size));
 
     return D;
 }
