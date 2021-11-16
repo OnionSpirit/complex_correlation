@@ -6,6 +6,8 @@
 #define RANDOM_NUMBER 1 + rand()%10
 
 std::complex<float> complexCorrelation(std::vector<std::complex<float>> const &, std::vector<std::complex<float>> const &);
+std::vector<std::complex<float>> sequenceCentralizer(std::vector<std::complex<float>> const &, int);
+std::complex<float> dispersion(std::vector<std::complex<float>> const &, int);
 
 int main() {
 
@@ -20,7 +22,7 @@ int main() {
         incoming_sequence.emplace_back(RANDOM_NUMBER); incoming_sequence.back().imag(RANDOM_NUMBER);
     }
 
-    std::cout << complexCorrelation(original_sequence, incoming_sequence) << std::endl;
+    std::cout << complexCorrelation(original_sequence, original_sequence) << std::endl;
 
     return 0;
 }
@@ -29,69 +31,54 @@ std::complex<float> complexCorrelation(std::vector<std::complex<float>> const & 
 
     int sequence_size = (int)original_sequence.size();
     std::complex<float> correlation_result;
-    std::complex<float> conjugated_incoming_sequence[sequence_size];
+    std::vector<std::complex<float>> conjugated_incoming_sequence;
 
-
-    std::complex<float> real_avg_original;
-    std::complex<float> imaginary_avg_original;
-    std::complex<float> dispersion_original;
-    std::complex<float> centralized_sequence_original[sequence_size];
-
-    for (std::complex<float> e : original_sequence){
-        real_avg_original += e.real();
-    } real_avg_original *= (1.0f / (float)sequence_size);
-
-    float temp_original = 0;
-    for (std::complex<float> e : original_sequence){
-        temp_original += e.imag();
-    } imaginary_avg_original.imag(temp_original); imaginary_avg_original *= (1.0f / (float)sequence_size);
-
-    for (int i = 0; std::complex<float> e : original_sequence){
-        centralized_sequence_original[i] = (e - (real_avg_original + imaginary_avg_original));
-        i++;
+    for(std::complex<float> e : incoming_sequence){
+        conjugated_incoming_sequence.emplace_back(conj(e));
     }
 
-    for (std::complex<float> e : centralized_sequence_original){
-        dispersion_original += norm(e);
-    } dispersion_original *= (1.0f / (float)sequence_size);
+    std::vector<std::complex<float>> centralized_sequence_original = sequenceCentralizer(original_sequence, sequence_size);
+    std::vector<std::complex<float>> centralized_sequence_incoming = sequenceCentralizer(conjugated_incoming_sequence, sequence_size);
 
-
-
-    std::complex<float> real_avg_incoming;
-    std::complex<float> imaginary_avg_incoming;
-    std::complex<float> dispersion_incoming;
-    std::complex<float> centralized_sequence_incoming[sequence_size];
-
-    for(int i = 0; std::complex<float> e : incoming_sequence){
-        conjugated_incoming_sequence[i] = conj(e);
-        i++;
-    }
-
-    for (std::complex<float> e : conjugated_incoming_sequence){
-        real_avg_incoming += e.real();
-    } real_avg_incoming *= (1.0f / (float)sequence_size);
-
-    float temp_incoming = 0;
-    for (std::complex<float> e : conjugated_incoming_sequence){
-        temp_incoming += e.imag();
-    } imaginary_avg_incoming.imag(temp_incoming); imaginary_avg_incoming *= (1.0f / (float)sequence_size);
-
-    for (int i = 0; std::complex<float> e : conjugated_incoming_sequence){
-        centralized_sequence_incoming[i] = (e - (real_avg_incoming + imaginary_avg_incoming));
-        i++;
-    }
-
-    for (std::complex<float> e : centralized_sequence_incoming){
-        dispersion_incoming += norm(e);
-    } dispersion_incoming *= (1.0f / (float)sequence_size);
-
-
+    std::complex<float> dispersion_original = dispersion(centralized_sequence_original, sequence_size);
+    std::complex<float> dispersion_incoming = dispersion(centralized_sequence_incoming, sequence_size);
 
     for(int i = 0; i < sequence_size; i++){
         correlation_result += centralized_sequence_incoming[i] * centralized_sequence_original[i];
     } correlation_result *= (1.0f / (float)sequence_size); correlation_result /= pow(dispersion_incoming * dispersion_original, 0.5);
 
-
-
     return correlation_result;
+}
+
+std::vector<std::complex<float>> sequenceCentralizer(std::vector<std::complex<float>> const & sequence, int  sequence_size){
+
+    std::complex<float> real_avg;
+    std::complex<float> imaginary_avg;
+    std::vector<std::complex<float>> centralized_sequence;
+
+    for (std::complex<float> e : sequence){
+        real_avg += e.real();
+    } real_avg *= (1.0f / (float)sequence_size);
+
+    float temp_original = 0;
+    for (std::complex<float> e : sequence){
+        temp_original += e.imag();
+    } imaginary_avg.imag(temp_original); imaginary_avg *= (1.0f / (float)sequence_size);
+
+    for (std::complex<float> e : sequence){
+        centralized_sequence.emplace_back(e - (real_avg + imaginary_avg));
+    }
+
+    return centralized_sequence;
+}
+
+std::complex<float> dispersion(std::vector<std::complex<float>> const & sequence, int sequence_size){
+
+    std::complex<float> D;
+
+    for (std::complex<float> e : sequence){
+        D += std::norm(e);
+    } D *= (1.0f / (float)sequence_size);
+
+    return D;
 }
