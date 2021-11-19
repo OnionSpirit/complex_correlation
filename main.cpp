@@ -24,7 +24,7 @@ int main() {
         incoming_sequence.emplace_back(RANDOM_NUMBER); incoming_sequence.back().imag(RANDOM_NUMBER);
     }
 
-    std::cout << Correlation::complexSequenceCorrelation(original_sequence, incoming_sequence) << std::endl;
+    std::cout << std::norm(Correlation::complexSequenceCorrelation(original_sequence, original_sequence)) << std::endl;
 
     return 0;
 }
@@ -56,21 +56,15 @@ namespace Correlation {
 
     std::vector<std::complex<float>> sequenceCentralizer(std::vector<std::complex<float>> const &sequence, int sequence_size) {
 
-        std::complex<float> real_avg;
-        std::complex<float> imaginary_avg;
+        std::complex<float> average;
         std::vector<std::complex<float>> centralized_sequence;
 
-        for (std::complex<float> e: sequence) {
-            real_avg += e.real();
-        } real_avg *= (1.0f / static_cast<float>(sequence_size));
+        for(auto e : sequence){
+            average += e;
+        } average *= (1.0f / static_cast<float>(sequence_size));
 
-        float temp_original = 0;
-        for (std::complex<float> e: sequence) {
-            temp_original += e.imag();
-        } imaginary_avg.imag(temp_original); imaginary_avg *= (1.0f / static_cast<float>(sequence_size));
-
-        for (std::complex<float> e: sequence) {
-            centralized_sequence.emplace_back(e - (real_avg + imaginary_avg));
+        for(auto e : sequence){
+            centralized_sequence.emplace_back(e - average);
         }
 
         return centralized_sequence;
